@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Wellness Toolkit</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;900&display=swap');
+
+    html, body {
+      scroll-behavior: smooth;
+      overflow-y: auto;
+    }
+
+    /* 🔹 Hero Background */
+    .hero-image {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      background: linear-gradient(270deg, #ff6a00, #ee0979, #2193b0, #6dd5ed);
+      background-size: 600% 600%;
+      animation: gradientShift 10s ease infinite;
+    }
+
+    .hero-image::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 0;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* 🔹 Hero Title Glow */
+    .hero-content h1 {
+      font-size: 5rem;
+      font-weight: 900;
+      line-height: 1.2;
+      text-align: center;
+      color: #fff; 
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+    }
+
+    .hero-content h1::after {
+      content: attr(data-text); 
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      color: transparent;
+      -webkit-text-stroke: 1px white;
+      background: linear-gradient(
+        120deg, 
+        transparent 0%, 
+        rgba(255,255,255,0.9) 50%, 
+        transparent 100%
+      );
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      animation: shine 1s linear infinite;
+    }
+
+    @keyframes shine {
+      0%   { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* Responsive scaling */
+    @media (max-width: 768px) {
+      .hero-content h1 { font-size: 3rem; }
+    }
+    @media (max-width: 480px) {
+      .hero-content h1 { font-size: 2.2rem; }
+    }
+
+    /* 🔹 Cards */
+    .card {
+      border-radius: 16px;
+      padding: 30px;
+      text-decoration: none;
+      color: #2d3748;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 
+                  0 4px 30px rgba(0, 0, 0, 0.1);
+      transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                  box-shadow 0.4s ease, background 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      will-change: transform;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 60%);
+      transition: all 0.4s ease;
+      z-index: 0;
+      opacity: 0;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 70%);
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 12px 16px rgba(0, 0, 0, 0.1), 
+                  0 8px 40px rgba(0, 0, 130, 0.15);
+      z-index: 10;
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 1rem;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero-image w-full flex items-center justify-center relative">
+    <div class="hero-content text-center px-4 z-10 bg-white/15 backdrop-blur-xl rounded-xl p-10 border-2 border-white/30">
+      <h1 class="gradient-title mb-6" data-text="Student Wellness Toolkit">Student Wellness Toolkit</h1>
+      <p class="text-xl text-white/90 max-w-2xl mx-auto mb-6">Essential tools to support your academic journey and personal well-being</p>
+      <button id="getStartedBtn" class="px-8 py-3 bg-white/15 hover:bg-white/25 backdrop-blur-lg text-white font-medium rounded-full transition-all duration-300 hover:scale-105 border-2 border-white/30 hover:shadow-lg cursor-pointer">
+        Get Started
+      </button>
+    </div>
+    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/ccfbf515-79b0-464b-bbec-da364c66a5f7.png"
+      alt="Student wellness tools" 
+      class="absolute w-full h-full object-cover opacity-20 z-[-1]" />
+  </div>
+
+  <!-- Tools Grid -->
+  <section id="tools">
+    <div class="container mx-auto px-4 py-12 max-w-6xl">
+      <div class="mb-12 text-center">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-4">Explore Our Tools</h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Select from our carefully curated collection of wellness resources designed specifically for students</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a href="mood.html" class="card bg-gradient-to-br from-blue-500 to-blue-600">
+          <div class="p-6 text-center text-white flex flex-col items-center">
+            <i class="fas fa-brain text-3xl mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Mood Tracker</h3>
+            <p class="opacity-90">Monitor your emotional wellbeing and identify patterns</p>
+          </div>
+        </a>
+
+        <a href="timer.html" class="card bg-gradient-to-br from-purple-500 to-purple-600">
+          <div class="p-6 text-center text-white flex flex-col items-center">
+            <i class="fas fa-clock text-3xl mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Pomodoro Timer</h3>
+            <p class="opacity-90">Boost productivity with focused work sessions</p>
+          </div>
+        </a>
+
+        <a href="expense.html" class="card bg-gradient-to-br from-green-500 to-green-600">
+          <div class="p-6 text-center text-white flex flex-col items-center">
+            <i class="fas fa-wallet text-3xl mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Expense Tracker</h3>
+            <p class="opacity-90">Manage your student budget effectively</p>
+          </div>
+        </a>
+
+        <a href="quotes.html" class="card bg-gradient-to-br from-yellow-500 to-yellow-600">
+          <div class="p-6 text-center text-white flex flex-col items-center">
+            <i class="fas fa-quote-right text-3xl mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Motivation Quotes</h3>
+            <p class="opacity-90">Get inspired with daily motivational content</p>
+          </div>
+        </a>
+
+        <a href="habits.html" class="card bg-gradient-to-br from-red-500 to-red-600">
+          <div class="p-6 text-center text-white flex flex-col items-center">
+            <i class="fas fa-check-circle text-3xl mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Habit Tracker</h3>
+            <p class="opacity-90">Build and maintain healthy routines</p>
+          </div>
+        </a>
+
+        <div class="card bg-gradient-to-br from-indigo-500 to-indigo-600">
+          <div class="p-6 text-center text-white flex flex-col items-center">
+            <i class="fas fa-plus text-3xl mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">More Tools Coming</h3>
+            <p class="opacity-90">We're constantly expanding our resources</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-b from-gray-900 to-gray-800 py-12 mt-16">
+    <div class="container mx-auto px-4 text-center">
+      <div class="flex justify-center space-x-8 mb-6">
+        <a href="#" class="w-12 h-12 rounded-full bg-white/5 hover:bg-white/15 flex items-center justify-center transition-all duration-300 transform hover:scale-110 group">
+          <i class="fab fa-twitter text-white/80 text-xl"></i>
+        </a>
+        <a href="#" class="w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all duration-300 transform hover:scale-110">
+          <i class="fab fa-instagram text-white/80 text-xl"></i>
+        </a>
+        <a href="#" class="w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all duration-300 transform hover:scale-110">
+          <i class="fab fa-github text-white/80 text-xl"></i>
+        </a>
+      </div>
+      <p class="text-white/70 mb-6 max-w-2xl mx-auto leading-relaxed">
+        Empowering students with thoughtful tools for academic and personal wellbeing. Our mission is to support your journey with beautifully designed, functional resources.
+      </p>
+      <div class="border-t border-white/10 pt-6">
+        <p class="text-white/50 text-sm">© 2023 Student Wellness Toolkit. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const getStartedBtn = document.getElementById('getStartedBtn');
+      const toolsSection = document.getElementById('tools');
+
+      getStartedBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Smooth scroll with JavaScript
+        toolsSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      });
+    });
+  </script>
+</body>
+</html>

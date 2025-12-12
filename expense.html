@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💰 Expense Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;900&display=swap');
+    
+    *, *::before, *::after { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(270deg, #11998e, #38ef7d, #00f260, #0575e6);
+      background-size: 600% 600%;
+      animation: gradientShift 8s ease infinite;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* Navigation Bar */
+    .nav-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 15px 0;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+    
+    .nav-logo {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+    
+    .nav-link {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .nav-link.active {
+      background: rgba(255, 255, 255, 0.25);
+      color: white;
+    }
+    
+    /* Main Container */
+    .main-container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 600px;
+      padding: 0;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15),
+                  0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+      position: relative;
+      z-index: 10;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      margin-top: 80px;
+      overflow: hidden;
+    }
+    
+    /* Header Section */
+    .header-section {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%);
+      padding: 40px 40px 30px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .icon-container {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 25px rgba(17, 153, 142, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .icon-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 3s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+    
+    .icon-container i {
+      font-size: 32px;
+      color: white;
+      z-index: 2;
+      position: relative;
+    }
+    
+    .header-section h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .header-section .subtitle {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 0;
+    }
+    
+    /* Content Section */
+    .content-section {
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.95);
+    }
+    
+    .expense-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    
+    .form-row {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .form-row input, .form-row select {
+      flex: 1;
+    }
+    
+    .expense-input, .category-select {
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      width: 150px;
+      padding: 14px 16px;
+      font-size: 16px;
+      color: #2d3748;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+    }
+    
+    .category-select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 12px center;
+      background-repeat: no-repeat;
+      background-size: 16px;
+      padding-right: 40px;
+    }
+    
+    .expense-input:focus, .category-select:focus {
+      outline: none;
+      border-color: #11998e;
+      box-shadow: 0 0 0 3px rgba(17, 153, 142, 0.15), 0 4px 20px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+      background: white;
+    }
+    
+    .expense-input::placeholder {
+      color: #a0aec0;
+    }
+    
+    .add-btn {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 16px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);
+    }
+    
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(17, 153, 142, 0.4);
+      background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+    }
+    
+    /* Quick Add Buttons */
+    .quick-add-section {
+      margin-bottom: 24px;
+    }
+    
+    .quick-add-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 12px;
+    }
+    
+    .quick-add-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .quick-add-btn {
+      background: rgba(17, 153, 142, 0.1);
+      border: 1px solid rgba(17, 153, 142, 0.2);
+      color: #11998e;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .quick-add-btn:hover {
+      background: rgba(17, 153, 142, 0.2);
+      transform: translateY(-1px);
+    }
+    
+    /* Enhanced Stats Card */
+    .stats-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    }
+    
+    .stats-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .stats-card h3 {
+      color: #2d3748;
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+    }
+    
+    .period-selector {
+      background: rgba(17, 153, 142, 0.1);
+      border: 1px solid rgba(17, 153, 142, 0.2);
+      color: #11998e;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .stat-item {
+      text-align: center;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #11998e;
+      line-height: 1;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #718096;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+    
+    /* Category Breakdown */
+    .category-breakdown {
+      margin-top: 16px;
+    }
+    
+    .category-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 12px;
+    }
+    
+    .category-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .category-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .category-icon {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: white;
+    }
+    
+    .category-name {
+      font-size: 13px;
+      color: #2d3748;
+      font-weight: 500;
+    }
+    
+    .category-amount {
+      font-size: 13px;
+      color: #11998e;
+      font-weight: 600;
+    }
+    
+    .category-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(17, 153, 142, 0.1);
+      border-radius: 2px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    
+    .category-fill {
+      height: 100%;
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+    
+    /* Insights Panel */
+    .insights-panel {
+      background: linear-gradient(135deg, rgba(17, 153, 142, 0.05), rgba(56, 239, 125, 0.05));
+      border: 1px solid rgba(17, 153, 142, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+    
+    .insights-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #11998e;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .insight-item {
+      font-size: 12px;
+      color: #4a5568;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .insight-icon {
+      color: #11998e;
+      font-size: 10px;
+    }
+    
+    /* Expense List */
+    .expense-list-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    }
+    
+    .expense-list-card h3 {
+      color: #2d3748;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .expense-entries {
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+    
+    .expense-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      border-left: 4px solid #11998e;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .expense-item:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      background: rgba(255, 255, 255, 0.95);
+    }
+    
+    .expense-description {
+      color: #2d3748;
+      font-weight: 500;
+      flex: 1;
+    }
+    
+    .expense-date {
+      font-size: 12px;
+      color: #718096;
+      margin-top: 4px;
+    }
+    
+    .expense-amount {
+      color: #11998e;
+      font-weight: 700;
+      font-size: 16px;
+      margin-right: 12px;
+    }
+    
+    .delete-btn {
+      background: rgba(229, 62, 62, 0.1);
+      border: 1px solid rgba(229, 62, 62, 0.2);
+      color: #e53e3e;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .delete-btn:hover {
+      background: rgba(229, 62, 62, 0.2);
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(229, 62, 62, 0.2);
+    }
+    
+    .clear-all-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #e53e3e 0%, #fc8181 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+    }
+    
+    .clear-all-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(229, 62, 62, 0.4);
+    }
+    
+    .empty-state {
+      text-align: center;
+      color: #a0aec0;
+      font-style: italic;
+      padding: 40px 20px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 12px;
+      border: 2px dashed rgba(160, 174, 192, 0.3);
+      backdrop-filter: blur(10px);
+    }
+    
+    .empty-state i {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      display: block;
+      color: #cbd5e0;
+    }
+    
+    /* Success animation */
+    .success-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: linear-gradient(135deg, #38a169, #68d391);
+      color: white;
+      padding: 20px 30px;
+      border-radius: 16px;
+      font-weight: 600;
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(56, 161, 105, 0.3);
+      transition: transform 0.3s ease;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .success-popup.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    
+    /* Responsive */
+    @media (max-width: 600px) {
+      .main-container {
+        margin: 90px 10px 20px;
+        max-width: calc(100% - 20px);
+      }
+      
+      .header-section, .content-section {
+        padding: 30px 20px;
+      }
+      
+      .header-section h1 {
+        font-size: 1.8rem;
+      }
+      
+      .form-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      
+      .quick-add-buttons {
+        justify-content: center;
+      }
+      
+      .nav-links {
+        gap: 15px;
+      }
+      
+      .nav-link {
+        padding: 6px 12px;
+        font-size: 14px;
+      }
+    }
+    
+    /* Scrollbar styling */
+    .expense-entries::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .expense-entries::-webkit-scrollbar-track {
+      background: rgba(241, 245, 249, 0.5);
+      border-radius: 3px;
+    }
+    
+    .expense-entries::-webkit-scrollbar-thumb {
+      background: #11998e;
+      border-radius: 3px;
+    }
+    
+    .expense-entries::-webkit-scrollbar-thumb:hover {
+      background: #0d7a70;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="nav-bar">
+    <div class="nav-content">
+      <a href="index.html" class="nav-logo">
+        <i class="fas fa-heart"></i>
+        Student Wellness
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="mood.html" class="nav-link">Mood</a>
+        <a href="timer.html" class="nav-link">Timer</a>
+        <a href="expense.html" class="nav-link active">Expenses</a>
+        <a href="habits.html" class="nav-link">Habits</a>
+      </div>
+    </div>
+  </nav>
+  
+  <div class="main-container">
+    <div class="header-section">
+      <div class="icon-container">
+        <i class="fas fa-wallet"></i>
+      </div>
+      <h1>Expense Tracker</h1>
+      <p class="subtitle">Manage your student budget effectively with intelligent insights</p>
+    </div>
+    
+    <div class="content-section">
+      <!-- Quick Add Section -->
+      <div class="quick-add-section">
+        <div class="quick-add-title">Quick Add Common Expenses</div>
+        <div class="quick-add-buttons">
+          <button class="quick-add-btn" data-description="Coffee" data-amount="50" data-category="Food">
+            <i class="fas fa-coffee"></i> Coffee ₹50
+          </button>
+          <button class="quick-add-btn" data-description="Bus Fare" data-amount="25" data-category="Transport">
+            <i class="fas fa-bus"></i> Bus ₹25
+          </button>
+          <button class="quick-add-btn" data-description="Lunch" data-amount="80" data-category="Food">
+            <i class="fas fa-utensils"></i> Lunch ₹80
+          </button>
+          <button class="quick-add-btn" data-description="Stationery" data-amount="150" data-category="Study">
+            <i class="fas fa-pen"></i> Stationery ₹150
+          </button>
+        </div>
+      </div>
+
+      <form class="expense-form" id="expenseForm">
+        <div class="form-row">
+          <input 
+            type="text" 
+            id="description" 
+            class="expense-input" 
+            placeholder="What did you spend on?" 
+            required>
+          <input 
+            type="number" 
+            id="amount" 
+            class="expense-input" 
+            placeholder="₹ Amount" 
+            step="0.01" 
+            min="0" 
+            required>
+          <select id="category" class="category-select" required>
+            <option value="">Category</option>
+            <option value="Food">🍽️ Food</option>
+            <option value="Transport">🚌 Transport</option>
+            <option value="Study">📚 Study</option>
+            <option value="Entertainment">🎬 Entertainment</option>
+            <option value="Shopping">🛍️ Shopping</option>
+            <option value="Other">📦 Other</option>
+          </select>
+        </div>
+        <button type="submit" class="add-btn">
+          <i class="fas fa-plus"></i> Add Expense
+        </button>
+      </form>
+      
+      <div class="stats-card">
+        <div class="stats-header">
+          <h3><i class="fas fa-chart-pie"></i> Spending Overview</h3>
+          <select class="period-selector" id="periodSelector">
+            <option value="today">Today</option>
+            <option value="week" selected>This Week</option>
+            <option value="month">This Month</option>
+          </select>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value">₹<span id="totalAmount">455.00</span></div>
+            <div class="stat-label">Total Spent</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="expenseCount">3</div>
+            <div class="stat-label">Transactions</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">₹<span id="avgExpense">151.67</span></div>
+            <div class="stat-label">Avg per Day</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">₹<span id="topCategory">280</span></div>
+            <div class="stat-label">Top Category</div>
+          </div>
+        </div>
+
+        <div class="category-breakdown">
+          <div class="category-title">Spending by Category</div>
+          <div id="categoryList">
+            <div class="category-item">
+              <div class="category-info">
+                <div class="category-icon"><i class="fas fa-utensils"></i></div>
+                <div class="category-name">Food</div>
+              </div>
+              <div class="category-amount">₹280.00</div>
+            </div>
+            <div class="category-item">
+              <div class="category-info">
+                <div class="category-icon"><i class="fas fa-bus"></i></div>
+                <div class="category-name">Transport</div>
+              </div>
+              <div class="category-amount">₹25.00</div>
+            </div>
+            <div class="category-item">
+              <div class="category-info">
+                <div class="category-icon"><i class="fas fa-pen"></i></div>
+                <div class="category-name">Study</div>
+              </div>
+              <div class="category-amount">₹150.00</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="insights-panel">
+          <div class="insights-title">
+            <i class="fas fa-lightbulb"></i> Smart Insights
+          </div>
+          <div class="insight-item">
+            <i class="fas fa-arrow-up insight-icon"></i>
+            You're spending 15% more on food this week
+          </div>
+          <div class="insight-item">
+            <i class="fas fa-star insight-icon"></i>
+            Transport costs are well within budget
+          </div>
+          <div class="insight-item">
+            <i class="fas fa-clock insight-icon"></i>
+            Most expenses happen around 2 PM
+          </div>
+        </div>
+      </div>
+      
+      <div class="expense-list-card">
+        <h3>
+          <i class="fas fa-list"></i>
+          Recent Expenses
+        </h3>
+        <div class="expense-entries" id="expenseEntries">
+          <div class="expense-item">
+            <div class="expense-description">
+              <div style="font-weight: 600; margin-bottom: 2px;">Coffee & Snacks</div>
+              <div class="expense-date">Today, 2:30 PM • Food</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="expense-amount">₹150.00</span>
+              <button class="delete-btn" onclick="deleteExpense(1)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div class="expense-item">
+            <div class="expense-description">
+              <div style="font-weight: 600; margin-bottom: 2px;">Bus Fare</div>
+              <div class="expense-date">Today, 9:15 AM • Transport</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="expense-amount">₹25.00</span>
+              <button class="delete-btn" onclick="deleteExpense(2)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div class="expense-item">
+            <div class="expense-description">
+              <div style="font-weight: 600; margin-bottom: 2px;">Stationery</div>
+              <div class="expense-date">Yesterday, 4:45 PM • Study</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="expense-amount">₹280.00</span>
+              <button class="delete-btn" onclick="deleteExpense(3)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <button class="clear-all-btn" id="clearAllBtn">
+        <i class="fas fa-trash-alt"></i> Clear All Expenses
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const expenseForm = document.getElementById('expenseForm');
+    const descriptionInput = document.getElementById('description');
+    const amountInput = document.getElementById('amount');
+    const categorySelect = document.getElementById('category');
+    const expenseEntries = document.getElementById('expenseEntries');
+    const totalAmount = document.getElementById('totalAmount');
+    const expenseCount = document.getElementById('expenseCount');
+    const avgExpense = document.getElementById('avgExpense');
+    const topCategory = document.getElementById('topCategory');
+    const categoryList = document.getElementById('categoryList');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const periodSelector = document.getElementById('periodSelector');
+
+    // Category icons mapping
+    const categoryIcons = {
+      'Food': 'fas fa-utensils',
+      'Transport': 'fas fa-bus',
+      'Study': 'fas fa-book',
+      'Entertainment': 'fas fa-film',
+      'Shopping': 'fas fa-shopping-bag',
+      'Other': 'fas fa-box'
+    };
+
+    // In-memory storage for this session
+    let expenses = [
+      {
+        id: 1,
+        description: "Coffee & Snacks",
+        amount: 150.00,
+        category: "Food",
+        date: "Today, 2:30 PM",
+        timestamp: Date.now() - 3600000
+      },
+      {
+        id: 2,
+        description: "Bus Fare",
+        amount: 25.00,
+        category: "Transport",
+        date: "Today, 9:15 AM",
+        timestamp: Date.now() - 21600000
+      },
+      {
+        id: 3,
+        description: "Stationery",
+        amount: 280.00,
+        category: "Study",
+        date: "Yesterday, 4:45 PM",
+        timestamp: Date.now() - 86400000
+      }
+    ];
+
+    function formatCurrency(amount) {
+      return amount.toFixed(2);
+    }
+
+    function formatDate() {
+      const now = new Date();
+      return now.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function calculateStats() {
+      const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+      const count = expenses.length;
+      const avg = count > 0 ? total / count : 0;
+      
+      // Calculate category totals
+      const categoryTotals = {};
+      expenses.forEach(expense => {
+        categoryTotals[expense.category] = (categoryTotals[expense.category] || 0) + expense.amount;
+      });
+      
+      const topCat = Object.keys(categoryTotals).reduce((a, b) => 
+        categoryTotals[a] > categoryTotals[b] ? a : b, Object.keys(categoryTotals)[0] || 'None'
+      );
+      
+      return {
+        total,
+        count,
+        avg,
+        topCategory: categoryTotals[topCat] || 0,
+        categoryTotals
+      };
+    }
+
+    function updateStats() {
+      const stats = calculateStats();
+      
+      totalAmount.textContent = formatCurrency(stats.total);
+      expenseCount.textContent = stats.count;
+      avgExpense.textContent = formatCurrency(stats.avg);
+      topCategory.textContent = formatCurrency(stats.topCategory);
+      
+      updateCategoryBreakdown(stats.categoryTotals);
+    }
+
+    function updateCategoryBreakdown(categoryTotals) {
+      const sortedCategories = Object.entries(categoryTotals)
+        .sort(([,a], [,b]) => b - a)
+        .slice(0, 5); // Show top 5 categories
+      
+      if (sortedCategories.length === 0) {
+        categoryList.innerHTML = '<div style="text-align: center; color: #a0aec0; padding: 20px;">No expenses yet</div>';
+        return;
+      }
+      
+      const maxAmount = Math.max(...Object.values(categoryTotals));
+      
+      categoryList.innerHTML = sortedCategories.map(([category, amount]) => {
+        const percentage = (amount / maxAmount) * 100;
+        const icon = categoryIcons[category] || 'fas fa-box';
+        
+        return `
+          <div class="category-item">
+            <div class="category-info">
+              <div class="category-icon"><i class="${icon}"></i></div>
+              <div class="category-name">${category}</div>
+            </div>
+            <div class="category-amount">₹${formatCurrency(amount)}</div>
+            <div class="category-bar">
+              <div class="category-fill" style="width: ${percentage}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function displayExpenses() {
+      if (expenses.length === 0) {
+        expenseEntries.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-receipt"></i>
+            <p>No expenses recorded yet. Start tracking your spending!</p>
+          </div>
+        `;
+        updateStats();
+        return;
+      }
+
+      expenseEntries.innerHTML = expenses.map(expense => `
+        <div class="expense-item">
+          <div class="expense-description">
+            <div style="font-weight: 600; margin-bottom: 2px;">${expense.description}</div>
+            <div class="expense-date">${expense.date} • ${expense.category}</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="expense-amount">₹${formatCurrency(expense.amount)}</span>
+            <button class="delete-btn" onclick="deleteExpense(${expense.id})">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      updateStats();
+    }
+
+    function showSuccessPopup(message) {
+      const popup = document.createElement('div');
+      popup.className = 'success-popup';
+      popup.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+      document.body.appendChild(popup);
+      
+      setTimeout(() => popup.classList.add('show'), 10);
+      
+      setTimeout(() => {
+        popup.classList.remove('show');
+        setTimeout(() => document.body.removeChild(popup), 300);
+      }, 2000);
+    }
+
+    // Quick add functionality
+    document.querySelectorAll('.quick-add-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const description = this.dataset.description;
+        const amount = this.dataset.amount;
+        const category = this.dataset.category;
+        
+        descriptionInput.value = description;
+        amountInput.value = amount;
+        categorySelect.value = category;
+        
+        showSuccessPopup(`Quick added: ${description} - ₹${amount}`);
+      });
+    });
+
+    // Add expense
+    expenseForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const description = descriptionInput.value.trim();
+      const amount = parseFloat(amountInput.value);
+      const category = categorySelect.value;
+
+      if (!description || isNaN(amount) || amount <= 0 || !category) {
+        alert('Please fill in all fields with valid data!');
+        return;
+      }
+
+      const newExpense = {
+        id: Date.now(),
+        description: description,
+        amount: amount,
+        category: category,
+        date: formatDate(),
+        timestamp: Date.now()
+      };
+
+      expenses.unshift(newExpense);
+      
+      if (expenses.length > 50) {
+        expenses = expenses.slice(0, 50);
+      }
+
+      displayExpenses();
+      showSuccessPopup('Expense added successfully!');
+      
+      expenseForm.reset();
+      descriptionInput.focus();
+    });
+
+    // Delete individual expense
+    window.deleteExpense = function(id) {
+      if (confirm('Delete this expense?')) {
+        expenses = expenses.filter(expense => expense.id !== id);
+        displayExpenses();
+        showSuccessPopup('Expense deleted!');
+      }
+    };
+
+    // Clear all expenses
+    clearAllBtn.addEventListener('click', function() {
+      if (confirm('Are you sure you want to clear all expenses? This action cannot be undone.')) {
+        expenses = [];
+        displayExpenses();
+        showSuccessPopup('All expenses cleared!');
+      }
+    });
+
+    // Period selector (for future implementation)
+    periodSelector.addEventListener('change', function() {
+      // Could filter expenses by period in the future
+      showSuccessPopup(`Viewing ${this.value} expenses`);
+    });
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', function() {
+      displayExpenses();
+      descriptionInput.focus();
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (descriptionInput.value.trim() && amountInput.value && categorySelect.value) {
+          expenseForm.dispatchEvent(new Event('submit'));
+        }
+      }
+    });
+  </script>
+</body>
+</html>
